@@ -26,7 +26,32 @@ standalone.html は正常動作したが iframe src="template/bucket.html" が�
 
 違うようだった。
 
-_header による対応をしてみた
+_header による対応をしてみたがなかなかテストがうまくいかない
+
+次のコマンドでローカルでも同様の現象が起きることを確認した。テストスピードアップ。
+
+```shell
+npx wrangler pages dev Build/Sandcastle
+```
+
+色々試す中、読み込み後 console から
+
+```javascript
+document.getElementById("bucketFrame").setAttribute("src", "templates/bucket.html")
+// もしくは
+document.getElementById("bucketFrame").contentWindow.location.reload();
+```
+
+を実行することで対応可能。
+
+いろいろためすうちに、CesiumSandcastle.js のなかで、
+
+```javascript
+    if (bucketFrame.contentWindow.location.href.indexOf("bucket.html") > 0) {
+```
+
+という箇所があるが、ここが Cloudflare Pages だと .html をカットしてしまうため、おかしい動きになったものと思われる。
+これを "bucket" にすることで回避した。
 
 ## 404 対応
 

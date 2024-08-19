@@ -536,7 +536,8 @@ require({
     clearRun();
     cesiumContainer.selectChild(bucketPane);
     // Check for a race condition in some browsers where the iframe hasn't loaded yet.
-    if (bucketFrame.contentWindow.location.href.indexOf("bucket.html") > 0) {
+    if (bucketFrame.contentWindow.location.href.indexOf("bucket") > 0) {
+      // cf-pages 対応のため bucket.html を bucket のみに
       bucketFrame.contentWindow.location.reload();
     }
   };
