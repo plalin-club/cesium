@@ -105,8 +105,7 @@
     "yargs": "^17.0.1"
   },
   "scripts": {
-    "prepare": "gulp prepare && husky",
-    "prepare-local": "gulp prepare && husky && playwright install --with-deps",
+    "prepare": "gulp prepare && husky && ( [ \"$CF_PAGES\" != \"1\" ] && playwright install --with-deps || echo 'Skipping Playwright install' )",
     "start": "node server.js",
     "start-public": "node server.js --public",
     "build": "gulp build",

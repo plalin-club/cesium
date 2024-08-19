@@ -316,10 +316,12 @@ const workspaceSpecFiles = {
 export async function createCombinedSpecList() {
   let contents = `export const VERSION = '${version}';\n`;
 
-  for (const workspace of Object.keys(workspaceSpecFiles)) {
-    const files = await globby(workspaceSpecFiles[workspace]);
-    for (const file of files) {
-      contents += `import '../${file}';\n`;
+  if (process.env.CF_PAGES !== "1") {
+    for (const workspace of Object.keys(workspaceSpecFiles)) {
+      const files = await globby(workspaceSpecFiles[workspace]);
+      for (const file of files) {
+        contents += `import '../${file}';\n`;
+      }
     }
   }
 
