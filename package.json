@@ -140,7 +140,8 @@
     "deploy-status": "gulp deployStatus",
     "deploy-set-version": "gulp deploySetVersion",
     "prettier": "prettier --write --no-config \"**/*\"",
-    "prettier-check": "prettier --check --no-config \"**/*\""
+    "prettier-check": "prettier --check --no-config \"**/*\"",
+    "cf-pages": "npm run make-zip && npm run build-apps && mkdir Build/Sandcastle/learn && mkdir Build/Sandcastle/learn/cesiumjs && mv Build/Documentation Build/Sandcastle/learn/cesiumjs/ref-doc && mv Build/CesiumUnminified Build/Sandcastle && echo \"404 not found\" > Build/Sandcastle/404.html"
   },
   "engines": {
     "node": ">=18.18.0"
