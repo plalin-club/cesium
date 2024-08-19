@@ -1638,16 +1638,8 @@ async function buildSandcastle() {
       .pipe(gulpReplace("../../SampleData", "../SampleData"))
       .pipe(
         gulpReplace("../../Build/Documentation", "/learn/cesiumjs/ref-doc/")
-      );
-
-    // Cloudflare Pages は .html をトリミングする仕様。iframe の src 先は Redirect を避けたいので .html を割愛
-    if (process.env.CF_PAGES === "1") {
-      appStream = appStream.pipe(
-        gulpReplace('src="templates/bucket.html"', 'src="templates/bucket"')
-      );
-    }
-
-    appStream = appStream.pipe(gulp.dest("Build/Sandcastle"));
+      )
+      .pipe(gulp.dest("Build/Sandcastle"));
   } else {
     // Remove swap out ESM modules for the IIFE build
     appStream = appStream

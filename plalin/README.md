@@ -20,23 +20,13 @@
 
 standalone.html は正常動作したが iframe src="template/bucket.html" がなにも表示されない現象が発生。
 
-原因は Cloudflare Pages の独自仕様である ”リクエストの URL から .html を自動的にトリミングする” に起因するものと考えられる。
+~~原因は Cloudflare Pages の独自仕様である ”リクエストの URL から .html を自動的にトリミングする” に起因するものと考えられる。~~
 
-参考: https://community.cloudflare.com/t/cloudflare-pages-truncates-urls-by-removing-the-html-extension/609238
+~~参考: https://community.cloudflare.com/t/cloudflare-pages-truncates-urls-by-removing-the-html-extension/609238~~
 
-暫定対応として
+違うようだった。
 
-```html
-<iframe src="template/bucket.html"></iframe>
-```
-
-を
-
-```html
-<iframe src="template/bucket"></iframe>
-```
-
-に置換するスクリプトを gulpfile.js に追加した。
+_header による対応をしてみた
 
 ## 404 対応
 
