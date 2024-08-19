@@ -316,7 +316,11 @@ const workspaceSpecFiles = {
 export async function createCombinedSpecList() {
   let contents = `export const VERSION = '${version}';\n`;
 
-  if (!process.env.CF_PAGES) {
+  console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  console.log("Creating combined spec list... CF_PAGES: ", process.env.CF_PAGES);
+  console.log(process.env);
+  console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  if (process.env.CF_PAGES !== "1") {
     for (const workspace of Object.keys(workspaceSpecFiles)) {
       const files = await globby(workspaceSpecFiles[workspace]);
       for (const file of files) {
