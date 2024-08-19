@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <meta name="description" content="Create 3D models using glTF." />
+    <meta name="cesium-sandcastle-labels" content="PlaLin,Showcases" />
+    <title>PlaLin Tokyo</title>
+    <script type="text/javascript" src="../Sandcastle-header.js"></script>
+    <script
+      type="text/javascript"
+      src="../../../Build/CesiumUnminified/Cesium.js"
+      nomodule
+    ></script>
+    <script type="module" src="../load-cesium-es6.js"></script>
+  </head>
+  <body
+    class="sandcastle-loading"
+    data-sandcastle-bucket="bucket-requirejs.html"
+  >
+    <style>
+      @import url(../templates/bucket.css);
+    </style>
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="loadingOverlay"><h1>Loading...</h1></div>
+    <div id="toolbar"></div>
+    <script id="cesium_sandcastle_script">
+      window.startup = async function (Cesium) {
+        "use strict";
+        //Sandcastle_Begin
+        // PLATEAU-Terrainで必要
+        Cesium.Ion.defaultAccessToken =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlNjk0MTM4NC1lMWI0LTQxNTgtYjcxZS01ZWJhMGJlMTE1MWQiLCJpZCI6MTQ5ODk3LCJpYXQiOjE3MTUxNTEyODZ9.2aUmEQ2-fDsjf-XeC6-hZpwkgwLse3yXoXF4xTOvPAY";
+
+        const viewer = new Cesium.Viewer("cesiumContainer", {});
+
+        // PLATEAU-Terrain
+        viewer.scene.setTerrain(
+          new Cesium.Terrain(
+            Cesium.CesiumTerrainProvider.fromIonAssetId(2487029)
+          )
+        );
+
+        // PLATEAU-Ortho
+        const imageProvider = new Cesium.UrlTemplateImageryProvider({
+          url:
+            "https://api.plateauview.mlit.go.jp/tiles/plateau-ortho-2023/{z}/{x}/{y}.png",
+          maximumLevel: 19,
+        });
+        const currentImage = viewer.scene.imageryLayers.addImageryProvider(
+          imageProvider
+        );
+
+        // 東京都千代田区の建築物モデル（3D Tiles）
+        Cesium.Cesium3DTileset.fromUrl(
+          "https://assets.cms.plateau.reearth.io/assets/0e/e5948a-e95c-4e31-be85-1f8c066ed996/13101_chiyoda-ku_pref_2023_citygml_1_op_bldg_3dtiles_13101_chiyoda-ku_lod1/tileset.json"
+        ).then((tileset) => {
+          viewer.scene.primitives.add(tileset);
+        });
+
+        // カメラの初期位置の指定
+        viewer.camera.setView({
+          destination: Cesium.Cartesian3.fromDegrees(139.755, 35.63, 2500.0),
+          orientation: {
+            pitch: Cesium.Math.toRadians(-15),
+          },
+        });
+        //Sandcastle_End
+      };
+      if (typeof Cesium !== "undefined") {
+        window.startupCalled = true;
+        window.startup(Cesium).catch((error) => {
+          "use strict";
+          console.error(error);
+        });
+        Sandcastle.finishedLoading();
+      }
+    </script>
+  </body>
+</html>

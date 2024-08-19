@@ -3,14 +3,12 @@
 ## Cloudflare Pages 設定内容
 
 - github の branch を指定する
-- 環境変数に PROD=1 をプロダクションもプレビューも両方に設定
 - ビルド＆デプロイ
   - ビルドの構成
     - ビルドコマンド: npm run cf-pages
     - ビルド出力ディレクトリ: /Build/Sandcastle
     - ルート ディレクトリ: /
     - プル リクエストのビルド コメント: 有効-
-- 2024.8 現在 Cesium の Build には nodejs v20 系を推奨だが、Cloudflare Pages の最新は v18 系であることに留意
 
 ## package.json
 

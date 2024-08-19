@@ -182,8 +182,8 @@ require({
   let searchTerm = "";
   let searchRegExp;
   let hintTimer;
-  const defaultDemo = "Hello World";
-  const defaultLabel = "Showcases";
+  const defaultDemo = "PlaLin Tokyo";
+  const defaultLabel = "PlaLin";
   let currentTab = defaultLabel;
   let newDemo;
   let demoHtml = "";
