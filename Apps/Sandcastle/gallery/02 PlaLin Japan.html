@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <meta
+      name="description"
+      content="PLATEAU 3D都市モデルを選択して表示することができます"
+    />
+    <meta name="cesium-sandcastle-labels" content="PlaLin" />
+    <title>PlaLin Japan</title>
+    <script type="text/javascript" src="../Sandcastle-header.js"></script>
+    <script
+      type="text/javascript"
+      src="../../../Build/CesiumUnminified/Cesium.js"
+      nomodule
+    ></script>
+    <script type="module" src="../load-cesium-es6.js"></script>
+  </head>
+  <body
+    class="sandcastle-loading"
+    data-sandcastle-bucket="bucket-requirejs.html"
+  >
+    <style>
+      @import url(../templates/bucket.css);
+    </style>
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="loadingOverlay"><h1>Loading...</h1></div>
+    <div id="toolbar"></div>
+    <script id="cesium_sandcastle_script">
+      window.startup = async function (Cesium) {
+        "use strict";
+        //Sandcastle_Begin
+        // PLATEAU-Terrainで必要
+        Cesium.Ion.defaultAccessToken =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlNjk0MTM4NC1lMWI0LTQxNTgtYjcxZS01ZWJhMGJlMTE1MWQiLCJpZCI6MTQ5ODk3LCJpYXQiOjE3MTUxNTEyODZ9.2aUmEQ2-fDsjf-XeC6-hZpwkgwLse3yXoXF4xTOvPAY";
+
+        const viewer = new Cesium.Viewer("cesiumContainer", {});
+
+        // PLATEAU-Terrain
+        viewer.scene.setTerrain(
+          new Cesium.Terrain(
+            Cesium.CesiumTerrainProvider.fromIonAssetId(2487029)
+          )
+        );
+
+        // PLATEAU-Ortho
+        const imageProvider = new Cesium.UrlTemplateImageryProvider({
+          url:
+            "https://api.plateauview.mlit.go.jp/tiles/plateau-ortho-2023/{z}/{x}/{y}.png",
+          maximumLevel: 19,
+        });
+        const currentImage = viewer.scene.imageryLayers.addImageryProvider(
+          imageProvider
+        );
+
+        // カメラの初期位置の指定
+        viewer.camera.setView({
+          destination: Cesium.Cartesian3.fromDegrees(135.5, 35.5, 3000000.0),
+        });
+
+        const tilesets = [];
+        // TODO: 追加だけでなく削除も実装
+        async function addTileset(dataset) {
+          const { id, url } = dataset;
+          let tileset;
+          if (Object.keys(tilesets).indexOf(id) === -1) {
+            tileset = await Cesium.Cesium3DTileset.fromUrl(url);
+            viewer.scene.primitives.add(tileset);
+
+            // TODO: 表示中の チェックマークなど
+            tilesets[id] = tileset;
+          } else {
+            tileset = tilesets[id];
+          }
+
+          const boundingSphere = tileset.boundingSphere;
+          // ECEF座標系から緯度、経度、高度への変換
+          const centerCartographic = Cesium.Cartographic.fromCartesian(
+            boundingSphere.center
+          );
+          // 高度を増加させてカメラを上空に配置
+          const cameraCartographic = new Cesium.Cartographic(
+            centerCartographic.longitude, // 中心の経度
+            centerCartographic.latitude, // 中心の緯度
+            centerCartographic.height + boundingSphere.radius * 2 // 高度を調整
+          );
+          // Cartographic座標を再びECEF座標に変換
+          const cameraPosition = Cesium.Cartesian3.fromRadians(
+            cameraCartographic.longitude,
+            cameraCartographic.latitude,
+            cameraCartographic.height
+          );
+          // カメラを指定した位置と方向に飛ばす
+          viewer.camera.flyTo({
+            destination: cameraPosition, // カメラの位置
+            orientation: {
+              heading: viewer.camera.heading, // 現在のヘディング
+              pitch: Cesium.Math.toRadians(-90), // 下向き
+              roll: 0.0, // 回転なし
+            },
+            duration: 2.0, // 飛行の時間 (秒)
+          });
+        }
+
+        async function initDatasets() {
+          const res = await fetch(
+            "https://api.plateauview.mlit.go.jp/datacatalog/plateau-datasets"
+          );
+          const json = await res.json();
+
+          // TODO: 件数が多いので選びやすくなる UIを用意したい
+          const options = json.datasets
+            .filter(
+              (dataset) =>
+                dataset.type === "建築物モデル" &&
+                dataset.format === "3D Tiles" &&
+                dataset.city_code !== null
+            )
+            .map((dataset) => {
+              return {
+                text: `${dataset.pref} ${dataset.city} ${dataset.name} LOD ${
+                  dataset.lod
+                } ${dataset.texture ? "テクスチャあり" : ""}`,
+                onselect: function () {
+                  addTileset(dataset);
+                },
+              };
+            });
+
+          options.unshift({
+            text: "表示したい建物モデルを選ぶ",
+          });
+          Sandcastle.addToolbarMenu(options);
+        }
+
+        initDatasets();
+        //Sandcastle_End
+      };
+      if (typeof Cesium !== "undefined") {
+        window.startupCalled = true;
+        window.startup(Cesium).catch((error) => {
+          "use strict";
+          console.error(error);
+        });
+        Sandcastle.finishedLoading();
+      }
+    </script>
+  </body>
+</html>

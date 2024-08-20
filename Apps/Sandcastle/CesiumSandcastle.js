@@ -182,7 +182,7 @@ require({
   let searchTerm = "";
   let searchRegExp;
   let hintTimer;
-  const defaultDemo = "PlaLin Tokyo";
+  const defaultDemo = "01 PlaLin Tokyo";
   const defaultLabel = "PlaLin";
   let currentTab = defaultLabel;
   let newDemo;
