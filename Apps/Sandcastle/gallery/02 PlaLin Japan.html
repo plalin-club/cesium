@@ -63,6 +63,10 @@
           destination: Cesium.Cartesian3.fromDegrees(135.5, 35.5, 3000000.0),
         });
 
+        // 山の向こうなどの地形が見えないようにする
+        // TODO: 札幌市の LOD 4 などの対応に地下も見えるし地下に潜れるようにすること
+        viewer.scene.globe.depthTestAgainstTerrain = true;
+
         const tilesets = [];
         // TODO: 追加だけでなく削除も実装
         async function addTileset(dataset) {
@@ -133,7 +137,7 @@
             });
 
           options.unshift({
-            text: "表示したい建物モデルを選ぶ",
+            text: "表示したい建築物モデルを選ぶ",
           });
           Sandcastle.addToolbarMenu(options);
         }
