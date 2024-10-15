@@ -901,7 +901,7 @@ require({
     function (e) {
       if (e.state && e.state.name && e.state.code) {
         loadFromGallery(e.state);
-        document.title = `${e.state.name} - Cesium Sandcastle`;
+        document.title = `${e.state.name} - Plalin Sandcastle`;
       }
     },
     false
@@ -1114,7 +1114,7 @@ require({
     if (confirmChange) {
       window.history.pushState(newDemo, newDemo.name, getPushStateUrl(newDemo));
       loadFromGallery(newDemo).then(function () {
-        document.title = `${newDemo.name} - Cesium Sandcastle`;
+        document.title = `${newDemo.name} - Plalin Sandcastle`;
       });
     }
   });
@@ -1258,9 +1258,9 @@ require({
           loadFromGallery(demo).then(function () {
             window.history.replaceState(demo, demo.name, getPushStateUrl(demo));
             if (defined(queryObject.gist)) {
-              document.title = "Gist Import - Cesium Sandcastle";
+              document.title = "Gist Import - Plalin Sandcastle";
             } else {
-              document.title = `${demo.name} - Cesium Sandcastle`;
+              document.title = `${demo.name} - Plalin Sandcastle`;
             }
           });
         }
@@ -1366,7 +1366,7 @@ require({
 
           window.history.pushState(demo, demo.name, getPushStateUrl(demo));
           loadFromGallery(demo).then(function () {
-            document.title = `${demo.name} - Cesium Sandcastle`;
+            document.title = `${demo.name} - Plalin Sandcastle`;
           });
         }
       }
