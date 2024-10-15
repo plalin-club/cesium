@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <meta
+      name="description"
+      content="CesiumJS 公式の Sandcastle はこちらです"
+    />
+    <meta name="cesium-sandcastle-labels" content="PlaLin" />
+    <title>PlaLin Japan</title>
+    <script type="text/javascript" src="../Sandcastle-header.js"></script>
+    <script
+      type="text/javascript"
+      src="../../../Build/CesiumUnminified/Cesium.js"
+      nomodule
+    ></script>
+    <script type="module" src="../load-cesium-es6.js"></script>
+  </head>
+  <body
+    class="sandcastle-loading"
+    data-sandcastle-bucket="bucket-requirejs.html"
+  >
+    <style>
+      @import url(../templates/bucket.css);
+    </style>
+    <div
+      style="background-color: white; height: 5em; width: 100%; padding: 2em"
+    >
+      <a
+        href="https://sandcastle.cesium.com/"
+        target="_blank"
+        style="font-size: 2em"
+        >CesiumJS 公式の Sandcastle はこちらです</a
+      >
+    </div>
+    <script id="cesium_sandcastle_script">
+      window.startup = async function (Cesium) {
+        "use strict";
+        //Sandcastle_Begin
+        // https://sandcastle.cesium.com/
+        // この URL は CesiumJS の公式 Sandcastle です。
+        // ここで公開されているサンプルコードを
+        // PLATEAU 3D 都市モデルと組み合わせることもできます。
+        // 想像力を広げるために、ご参照ください。
+        //Sandcastle_End
+      };
+      if (typeof Cesium !== "undefined") {
+        window.startupCalled = true;
+        window.startup(Cesium).catch((error) => {
+          "use strict";
+          console.error(error);
+        });
+        Sandcastle.finishedLoading();
+      }
+    </script>
+  </body>
+</html>
