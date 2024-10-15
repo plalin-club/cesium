@@ -56,3 +56,9 @@ document.getElementById("bucketFrame").contentWindow.location.reload();
 Cloudflare Pages は 404.html がない場合は index.html などを自動的に表示する。
 
 それだとミスに気づきにくいケースがあるため シンプルな 404.html 生成を package.json の script cf-pages に追加した。
+
+## AccessToken
+
+/cesium/Apps/Sandcastle/load-cesium-es6.js
+
+に一旦設定
