@@ -87,7 +87,18 @@
           const { id, url } = dataset;
           let tileset;
           if (Object.keys(tilesets).indexOf(id) === -1) {
-            tileset = await Cesium.Cesium3DTileset.fromUrl(url);
+            tileset = await Cesium.Cesium3DTileset.fromUrl(url, {
+              // 「京都市東山区LOD3テクスチャあり」などを表示するためには十分なメモリが必要
+              // TODO: マシンスペックに合わせたチューニングがベター
+              cacheBytes: 8192 * 1024 * 1024 * 2, // 8GB
+              maximumCacheOverflowBytes: 4096 * 1024 * 1024, // 4
+              maximumScreenSpaceError: 24, // 少し詳細度を下げる
+              preferLeaves: false, // 親タイルを優先
+              dynamicScreenSpaceError: true,
+              dynamicScreenSpaceErrorDensity: 0.00278,
+              dynamicScreenSpaceErrorFactor: 4.0,
+              skipLevelOfDetail: true,
+            });
             viewer.scene.primitives.add(tileset);
 
             // TODO: 表示中の チェックマークなど
