@@ -352,35 +352,35 @@ function VoxelInspectorViewModel(scene) {
     },
   });
   addProperty({
-    name: "boundsCylinderMaxHeight",
+    name: "boundsCylinderMaxAngle",
     initialValue: 0.0,
     setPrimitiveFunction: getBoundSetter("maxBounds", "y"),
     getPrimitiveFunction: function () {
-      that.boundsCylinderMaxHeight = that._voxelPrimitive.maxBounds.y;
-    },
-  });
-  addProperty({
-    name: "boundsCylinderMinHeight",
-    initialValue: 0.0,
-    setPrimitiveFunction: getBoundSetter("minBounds", "y"),
-    getPrimitiveFunction: function () {
-      that.boundsCylinderMinHeight = that._voxelPrimitive.minBounds.y;
-    },
-  });
-  addProperty({
-    name: "boundsCylinderMaxAngle",
-    initialValue: 0.0,
-    setPrimitiveFunction: getBoundSetter("maxBounds", "z"),
-    getPrimitiveFunction: function () {
-      that.boundsCylinderMaxAngle = that._voxelPrimitive.maxBounds.z;
+      that.boundsCylinderMaxAngle = that._voxelPrimitive.maxBounds.y;
     },
   });
   addProperty({
     name: "boundsCylinderMinAngle",
     initialValue: 0.0,
+    setPrimitiveFunction: getBoundSetter("minBounds", "y"),
+    getPrimitiveFunction: function () {
+      that.boundsCylinderMinAngle = that._voxelPrimitive.minBounds.y;
+    },
+  });
+  addProperty({
+    name: "boundsCylinderMaxHeight",
+    initialValue: 0.0,
+    setPrimitiveFunction: getBoundSetter("maxBounds", "z"),
+    getPrimitiveFunction: function () {
+      that.boundsCylinderMaxHeight = that._voxelPrimitive.maxBounds.z;
+    },
+  });
+  addProperty({
+    name: "boundsCylinderMinHeight",
+    initialValue: 0.0,
     setPrimitiveFunction: getBoundSetter("minBounds", "z"),
     getPrimitiveFunction: function () {
-      that.boundsCylinderMinAngle = that._voxelPrimitive.minBounds.z;
+      that.boundsCylinderMinHeight = that._voxelPrimitive.minBounds.z;
     },
   });
   addProperty({
@@ -502,35 +502,35 @@ function VoxelInspectorViewModel(scene) {
     },
   });
   addProperty({
-    name: "clippingCylinderMaxHeight",
+    name: "clippingCylinderMaxAngle",
     initialValue: 0.0,
     setPrimitiveFunction: getBoundSetter("maxClippingBounds", "y"),
     getPrimitiveFunction: function () {
-      that.clippingCylinderMaxHeight = that._voxelPrimitive.maxClippingBounds.y;
-    },
-  });
-  addProperty({
-    name: "clippingCylinderMinHeight",
-    initialValue: 0.0,
-    setPrimitiveFunction: getBoundSetter("minClippingBounds", "y"),
-    getPrimitiveFunction: function () {
-      that.clippingCylinderMinHeight = that._voxelPrimitive.minClippingBounds.y;
-    },
-  });
-  addProperty({
-    name: "clippingCylinderMaxAngle",
-    initialValue: 0.0,
-    setPrimitiveFunction: getBoundSetter("maxClippingBounds", "z"),
-    getPrimitiveFunction: function () {
-      that.clippingCylinderMaxAngle = that._voxelPrimitive.maxClippingBounds.z;
+      that.clippingCylinderMaxAngle = that._voxelPrimitive.maxClippingBounds.y;
     },
   });
   addProperty({
     name: "clippingCylinderMinAngle",
     initialValue: 0.0,
+    setPrimitiveFunction: getBoundSetter("minClippingBounds", "y"),
+    getPrimitiveFunction: function () {
+      that.clippingCylinderMinAngle = that._voxelPrimitive.minClippingBounds.y;
+    },
+  });
+  addProperty({
+    name: "clippingCylinderMaxHeight",
+    initialValue: 0.0,
+    setPrimitiveFunction: getBoundSetter("maxClippingBounds", "z"),
+    getPrimitiveFunction: function () {
+      that.clippingCylinderMaxHeight = that._voxelPrimitive.maxClippingBounds.z;
+    },
+  });
+  addProperty({
+    name: "clippingCylinderMinHeight",
+    initialValue: 0.0,
     setPrimitiveFunction: getBoundSetter("minClippingBounds", "z"),
     getPrimitiveFunction: function () {
-      that.clippingCylinderMinAngle = that._voxelPrimitive.minClippingBounds.z;
+      that.clippingCylinderMinHeight = that._voxelPrimitive.minClippingBounds.z;
     },
   });
 
@@ -545,7 +545,7 @@ function VoxelInspectorViewModel(scene) {
     getPrimitiveFunction: function () {
       that.translationX = Matrix4.getTranslation(
         that._voxelPrimitive.modelMatrix,
-        new Cartesian3()
+        new Cartesian3(),
       ).x;
     },
   });
@@ -560,7 +560,7 @@ function VoxelInspectorViewModel(scene) {
     getPrimitiveFunction: function () {
       that.translationY = Matrix4.getTranslation(
         that._voxelPrimitive.modelMatrix,
-        new Cartesian3()
+        new Cartesian3(),
       ).y;
     },
   });
@@ -575,7 +575,7 @@ function VoxelInspectorViewModel(scene) {
     getPrimitiveFunction: function () {
       that.translationZ = Matrix4.getTranslation(
         that._voxelPrimitive.modelMatrix,
-        new Cartesian3()
+        new Cartesian3(),
       ).z;
     },
   });
@@ -591,7 +591,7 @@ function VoxelInspectorViewModel(scene) {
     getPrimitiveFunction: function () {
       that.scaleX = Matrix4.getScale(
         that._voxelPrimitive.modelMatrix,
-        new Cartesian3()
+        new Cartesian3(),
       ).x;
     },
   });
@@ -606,7 +606,7 @@ function VoxelInspectorViewModel(scene) {
     getPrimitiveFunction: function () {
       that.scaleY = Matrix4.getScale(
         that._voxelPrimitive.modelMatrix,
-        new Cartesian3()
+        new Cartesian3(),
       ).y;
     },
   });
@@ -621,7 +621,7 @@ function VoxelInspectorViewModel(scene) {
     getPrimitiveFunction: function () {
       that.scaleZ = Matrix4.getScale(
         that._voxelPrimitive.modelMatrix,
-        new Cartesian3()
+        new Cartesian3(),
       ).z;
     },
   });
@@ -667,13 +667,13 @@ function setModelMatrix(viewModel) {
     viewModel.translationX,
     viewModel.translationY,
     viewModel.translationZ,
-    scratchTranslation
+    scratchTranslation,
   );
   const scale = Cartesian3.fromElements(
     viewModel.scaleX,
     viewModel.scaleY,
     viewModel.scaleZ,
-    scratchScale
+    scratchScale,
   );
   const hpr = scratchHeadingPitchRoll;
   hpr.heading = viewModel.angleX;
@@ -684,7 +684,7 @@ function setModelMatrix(viewModel) {
   viewModel._voxelPrimitive.modelMatrix = Matrix4.fromRotationTranslation(
     rotationScale,
     translation,
-    viewModel._voxelPrimitive.modelMatrix
+    viewModel._voxelPrimitive.modelMatrix,
   );
 }
 
@@ -720,21 +720,22 @@ Object.defineProperties(VoxelInspectorViewModel.prototype, {
         this._voxelPrimitive = voxelPrimitive;
 
         const that = this;
-        that._customShaderCompilationRemoveCallback = that._voxelPrimitive.customShaderCompilationEvent.addEventListener(
-          function (error) {
-            const shaderString =
-              that._voxelPrimitive.customShader.fragmentShaderText;
-            that.shaderString = formatShaderString(shaderString);
+        that._customShaderCompilationRemoveCallback =
+          that._voxelPrimitive.customShaderCompilationEvent.addEventListener(
+            function (error) {
+              const shaderString =
+                that._voxelPrimitive.customShader.fragmentShaderText;
+              that.shaderString = formatShaderString(shaderString);
 
-            if (!defined(error)) {
-              that.shaderCompilationMessage = "Shader compiled successfully!";
-              that.shaderCompilationSuccess = true;
-            } else {
-              that.shaderCompilationMessage = error.message;
-              that.shaderCompilationSuccess = false;
-            }
-          }
-        );
+              if (!defined(error)) {
+                that.shaderCompilationMessage = "Shader compiled successfully!";
+                that.shaderCompilationSuccess = true;
+              } else {
+                that.shaderCompilationMessage = error.message;
+                that.shaderCompilationSuccess = false;
+              }
+            },
+          );
         that._modelMatrixReady = false;
         for (let i = 0; i < that._getPrimitiveFunctions.length; i++) {
           that._getPrimitiveFunctions[i]();
@@ -806,7 +807,7 @@ VoxelInspectorViewModel.prototype.compileShader = function () {
  */
 VoxelInspectorViewModel.prototype.shaderEditorKeyPress = function (
   sender,
-  event
+  event,
 ) {
   if (event.keyCode === 9) {
     //tab

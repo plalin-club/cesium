@@ -2,7 +2,6 @@ import buildModuleUrl from "../Core/buildModuleUrl.js";
 import BoxGeometry from "../Core/BoxGeometry.js";
 import Cartesian3 from "../Core/Cartesian3.js";
 import Check from "../Core/Check.js";
-import defaultValue from "../Core/defaultValue.js";
 import defined from "../Core/defined.js";
 import destroyObject from "../Core/destroyObject.js";
 import DeveloperError from "../Core/DeveloperError.js";
@@ -71,7 +70,7 @@ function SkyBox(options) {
    * @type {boolean}
    * @default true
    */
-  this.show = defaultValue(options.show, true);
+  this.show = options.show ?? true;
 
   this._command = new DrawCommand({
     modelMatrix: Matrix4.clone(Matrix4.IDENTITY),
@@ -81,6 +80,8 @@ function SkyBox(options) {
 
   this._attributeLocations = undefined;
   this._useHdr = undefined;
+  this._hasError = false;
+  this._error = undefined;
 }
 
 /**
@@ -111,6 +112,15 @@ SkyBox.prototype.update = function (frameState, useHdr) {
     return undefined;
   }
 
+  // Throw any errors that had previously occurred asynchronously so they aren't
+  // ignored when running.  See https://github.com/CesiumGS/cesium/pull/12307
+  if (this._hasError) {
+    const error = this._error;
+    this._hasError = false;
+    this._error = undefined;
+    throw error;
+  }
+
   if (this._sources !== this.sources) {
     this._sources = this.sources;
     const sources = this.sources;
@@ -119,32 +129,40 @@ SkyBox.prototype.update = function (frameState, useHdr) {
     Check.defined("this.sources", sources);
     if (
       Object.values(CubeMap.FaceName).some(
-        (faceName) => !defined(sources[faceName])
+        (faceName) => !defined(sources[faceName]),
       )
     ) {
       throw new DeveloperError(
-        "this.sources must have positiveX, negativeX, positiveY, negativeY, positiveZ, and negativeZ properties."
+        "this.sources must have positiveX, negativeX, positiveY, negativeY, positiveZ, and negativeZ properties.",
       );
     }
 
     const sourceType = typeof sources.positiveX;
     if (
       Object.values(CubeMap.FaceName).some(
-        (faceName) => typeof sources[faceName] !== sourceType
+        (faceName) => typeof sources[faceName] !== sourceType,
       )
     ) {
       throw new DeveloperError(
-        "this.sources properties must all be the same type."
+        "this.sources properties must all be the same type.",
       );
     }
     //>>includeEnd('debug');
 
     if (typeof sources.positiveX === "string") {
       // Given urls for cube-map images.  Load them.
-      loadCubeMap(context, this._sources).then(function (cubeMap) {
-        that._cubeMap = that._cubeMap && that._cubeMap.destroy();
-        that._cubeMap = cubeMap;
-      });
+      loadCubeMap(context, this._sources)
+        .then(function (cubeMap) {
+          that._cubeMap = that._cubeMap && that._cubeMap.destroy();
+          that._cubeMap = cubeMap;
+        })
+        .catch((error) => {
+          // Defer throwing the error until the next call to update to prevent
+          // test from failing in `afterAll` if this is rejected after the test
+          // using the Skybox ends.  See https://github.com/CesiumGS/cesium/pull/12307
+          this._hasError = true;
+          this._error = error;
+        });
     } else {
       this._cubeMap = this._cubeMap && this._cubeMap.destroy();
       this._cubeMap = new CubeMap({
@@ -167,11 +185,10 @@ SkyBox.prototype.update = function (frameState, useHdr) {
       BoxGeometry.fromDimensions({
         dimensions: new Cartesian3(2.0, 2.0, 2.0),
         vertexFormat: VertexFormat.POSITION_ONLY,
-      })
+      }),
     );
-    const attributeLocations = (this._attributeLocations = GeometryPipeline.createAttributeLocations(
-      geometry
-    ));
+    const attributeLocations = (this._attributeLocations =
+      GeometryPipeline.createAttributeLocations(geometry));
 
     command.vertexArray = VertexArray.fromGeometry({
       context: context,
