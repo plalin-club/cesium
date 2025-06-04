@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -18,10 +18,7 @@
     ></script>
     <script type="module" src="../load-cesium-es6.js"></script>
   </head>
-  <body
-    class="sandcastle-loading"
-    data-sandcastle-bucket="bucket-requirejs.html"
-  >
+  <body class="sandcastle-loading" data-sandcastle-bucket="bucket-requirejs.html">
     <style>
       @import url(../templates/bucket.css);
     </style>
@@ -40,24 +37,32 @@
 
         // PLATEAU-Terrain
         viewer.scene.setTerrain(
-          new Cesium.Terrain(
-            Cesium.CesiumTerrainProvider.fromIonAssetId(2487029)
-          )
+          new Cesium.Terrain(Cesium.CesiumTerrainProvider.fromIonAssetId(2487029)),
         );
+
+        viewer.imageryLayers.removeAll();
+
+        // 地理院タイル
+        const imageProviderStd = new Cesium.UrlTemplateImageryProvider({
+          url: "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",
+          maximumLevel: 18,
+          credit: new Cesium.Credit("地理院タイル（衛星写真）"),
+        });
+        const imageryLayer1 =
+          viewer.scene.imageryLayers.addImageryProvider(imageProviderStd);
 
         // PLATEAU-Ortho
         const imageProvider = new Cesium.UrlTemplateImageryProvider({
-          url:
-            "https://api.plateauview.mlit.go.jp/tiles/plateau-ortho-2023/{z}/{x}/{y}.png",
+          url: "https://api.plateauview.mlit.go.jp/tiles/plateau-ortho-2023/{z}/{x}/{y}.png",
           maximumLevel: 19,
+          credit: new Cesium.Credit("PLATEAU-Ortho"),
         });
-        const currentImage = viewer.scene.imageryLayers.addImageryProvider(
-          imageProvider
-        );
+        const imageryLayer2 =
+          viewer.scene.imageryLayers.addImageryProvider(imageProvider);
 
         // 東京都千代田区の建築物モデル（3D Tiles）
         Cesium.Cesium3DTileset.fromUrl(
-          "https://assets.cms.plateau.reearth.io/assets/0e/e5948a-e95c-4e31-be85-1f8c066ed996/13101_chiyoda-ku_pref_2023_citygml_1_op_bldg_3dtiles_13101_chiyoda-ku_lod1/tileset.json"
+          "https://assets.cms.plateau.reearth.io/assets/0e/e5948a-e95c-4e31-be85-1f8c066ed996/13101_chiyoda-ku_pref_2023_citygml_1_op_bldg_3dtiles_13101_chiyoda-ku_lod1/tileset.json",
         ).then((tileset) => {
           viewer.scene.primitives.add(tileset);
         });

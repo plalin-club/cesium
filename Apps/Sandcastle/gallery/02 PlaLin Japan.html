@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -21,10 +21,7 @@
     ></script>
     <script type="module" src="../load-cesium-es6.js"></script>
   </head>
-  <body
-    class="sandcastle-loading"
-    data-sandcastle-bucket="bucket-requirejs.html"
-  >
+  <body class="sandcastle-loading" data-sandcastle-bucket="bucket-requirejs.html">
     <style>
       @import url(../templates/bucket.css);
       #search-label {
@@ -57,20 +54,28 @@
 
         // PLATEAU-Terrain
         viewer.scene.setTerrain(
-          new Cesium.Terrain(
-            Cesium.CesiumTerrainProvider.fromIonAssetId(2487029)
-          )
+          new Cesium.Terrain(Cesium.CesiumTerrainProvider.fromIonAssetId(2487029)),
         );
+
+        viewer.imageryLayers.removeAll();
+
+        // 地理院タイル
+        const imageProviderStd = new Cesium.UrlTemplateImageryProvider({
+          url: "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",
+          maximumLevel: 18,
+          credit: new Cesium.Credit("地理院タイル（衛星写真）"),
+        });
+        const imageryLayer1 =
+          viewer.scene.imageryLayers.addImageryProvider(imageProviderStd);
 
         // PLATEAU-Ortho
         const imageProvider = new Cesium.UrlTemplateImageryProvider({
-          url:
-            "https://api.plateauview.mlit.go.jp/tiles/plateau-ortho-2023/{z}/{x}/{y}.png",
+          url: "https://api.plateauview.mlit.go.jp/tiles/plateau-ortho-2023/{z}/{x}/{y}.png",
           maximumLevel: 19,
+          credit: new Cesium.Credit("PLATEAU-Ortho"),
         });
-        const currentImage = viewer.scene.imageryLayers.addImageryProvider(
-          imageProvider
-        );
+        const imageryLayer2 =
+          viewer.scene.imageryLayers.addImageryProvider(imageProvider);
 
         // カメラの初期位置の指定
         viewer.camera.setView({
@@ -110,19 +115,19 @@
           const boundingSphere = tileset.boundingSphere;
           // ECEF座標系から緯度、経度、高度への変換
           const centerCartographic = Cesium.Cartographic.fromCartesian(
-            boundingSphere.center
+            boundingSphere.center,
           );
           // 高度を増加させてカメラを上空に配置
           const cameraCartographic = new Cesium.Cartographic(
             centerCartographic.longitude, // 中心の経度
             centerCartographic.latitude, // 中心の緯度
-            centerCartographic.height + boundingSphere.radius * 2 // 高度を調整
+            centerCartographic.height + boundingSphere.radius * 2, // 高度を調整
           );
           // Cartographic座標を再びECEF座標に変換
           const cameraPosition = Cesium.Cartesian3.fromRadians(
             cameraCartographic.longitude,
             cameraCartographic.latitude,
-            cameraCartographic.height
+            cameraCartographic.height,
           );
           // カメラを指定した位置と方向に飛ばす
           viewer.camera.flyTo({
@@ -140,7 +145,7 @@
           const datalist = document.getElementById("options");
 
           const res = await fetch(
-            "https://api.plateauview.mlit.go.jp/datacatalog/plateau-datasets"
+            "https://api.plateauview.mlit.go.jp/datacatalog/plateau-datasets",
           );
           const json = await res.json();
 
@@ -151,7 +156,7 @@
               (dataset) =>
                 dataset.type === "建築物モデル" &&
                 dataset.format === "3D Tiles" &&
-                dataset.city_code !== null
+                dataset.city_code !== null,
             )
             .forEach((dataset) => {
               const newOption = document.createElement("option");
@@ -168,7 +173,7 @@
           input.addEventListener("input", function () {
             const options = document.querySelectorAll("#options option");
             const selectedOption = Array.from(options).find(
-              (option) => option.value === input.value
+              (option) => option.value === input.value,
             );
 
             if (selectedOption) {

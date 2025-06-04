@@ -1346,7 +1346,7 @@ require({
     demoLink.className = "linkButton";
     demoLink.href = `gallery/${encodeURIComponent(demo.name)}.html`;
 
-    if (demo.name === "Hello World") {
+    if (demo.name === "01 PlaLin Tokyo") {
       newDemo = demo;
     }
     demoLink.onclick = function (e) {
