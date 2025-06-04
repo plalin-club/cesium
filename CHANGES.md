@@ -1,23 +1,77 @@
 # Change Log
 
+## 1.130 - 2025-06-02
+
+### @cesium/engine
+
+#### Breaking Changes :mega:
+
+- The `FragmentInput` struct for voxel shaders has been updated to be more consistent with the `CustomShader` documentation. Remaining differences in `CustomShader` usage between `VoxelPrimitive` and `Cesium3DTileset` or `Model` are now documented in the Custom Shader Guide. [#12636](https://github.com/CesiumGS/cesium/pull/12636). Key changes include:
+  - The non-standard position attributes `fsInput.voxel.positionUv`, `fsInput.voxel.positionShapeUv`, and `fsInput.voxel.positionLocal` have been removed, and replaced by a single eye coordinate position `fsInput.attributes.positionEC`.
+  - The normal in model coordinates `fsInput.voxel.surfaceNormal` has been replaced by a normal in eye coordinates `fsInput.attributes.normalEC`. Example:
+
+```glsl
+// Replace this:
+// vec3 voxelNormal = normalize(czm_normal * fsInput.voxel.surfaceNormal);
+// with this:
+vec3 voxelNormal = fsInput.attributes.normalEC;
+```
+
+#### Additions :tada:
+
+- Add basic support for draping imagery on 3D Tiles. [#12567](https://github.com/CesiumGS/cesium/pull/12567)
+- Add support for 3D Textures and add Volume Cloud sandcastle example. [#12661](https://github.com/CesiumGS/cesium/pull/12611)
+
+#### Fixes :wrench:
+
+- Fixed voxel rendering with orthographic cameras. [#12629](https://github.com/CesiumGS/cesium/pull/12629)
+
+## 1.129 - 2025-05-01
+
+### @cesium/engine
+
+#### Breaking Changes :mega:
+
+- `VoxelProvider.minimumBounds` and `.maximumBounds` are now specified as physical values, rather than shape space values. [#12592](https://github.com/CesiumGS/cesium/pull/12592)
+
+#### Additions :tada:
+
+- Added `Material with Custom GLSL` Sandbox Demo. [#12549](https://github.com/CesiumGS/cesium/issues/12549)
+
+#### Fixes :wrench:
+
+- `QuadtreePrimitive.updateHeights` now converts position to Cartographic before invoking the callback, ensuring compatibility with change introduced by [commit 53889cb](https://github.com/CesiumGS/cesium/commit/53889cb) and preventing unnecessary computation. [#12555](https://github.com/CesiumGS/cesium/pull/12555)
+- Fixed `Polyline*MaterialProperty` width artifacts (reverted [#12434](https://github.com/CesiumGS/cesium/pull/12434)). [#12506](https://github.com/CesiumGS/cesium/issues/12506)
+- `Check.typeOf.object` now asserts `Record<string|number|symbol, any>` instead of `object` to allow property checks after assertion. [#12572](https://github.com/CesiumGS/cesium/issues/12572)
+
 ## 1.128 - 2025-04-01
 
 ### @cesium/engine
 
 #### Breaking Changes :mega:
 
-- `Camera.getPickRay` was erroneous returning a result in camera coordinates. It is now returned in world coordinates as stated in the documentation. The result can be transformed using `Camera.inverseViewMatrix` to achieve the previous behavior.
+- `Camera.getPickRay` was erroneously returning a result in camera coordinates. It is now returned in world coordinates as stated in the documentation. The result can be transformed using `Camera.inverseViewMatrix` to achieve the previous behavior.
+- `VoxelMetadataOrder` has been made private, and the `metadataOrder` property has been removed from the `VoxelProvider` interface.
 
-#### Deprecated :hourglass_flowing_sand:
+#### Additions :tada:
 
-- `defaultValue` function and `defaultValue.EMPTY_OBJECT` have been deprecated, and will be removed in 1.134. Use respectively the nullish coalescing operator [??](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) and `Frozen.EMPTY_OBJECT` instead. A new `Frozen.EMPTY_ARRAY` frozen value has been added for the same purpose as `Frozen.EMPTY_OBJECT`. See [Coding Guide](https://github.com/CesiumGS/cesium/tree/main/Documentation/Contributors/CodingGuide#default-parameter-values).
+- Added support for loading iTwin data using share keys as an alternative to user-based OAuth. When using a share key, set `ITwinPlatform.defaultShareKey`. [#12530](https://github.com/CesiumGS/cesium/pull/12530)
+- Added `Frozen.EMPTY_OBJECT` and `Frozen.EMPTY_ARRAY` for use as default parameter values that avoid unnecessary memory allocations. [#12507](https://github.com/CesiumGS/cesium/pull/12507)
 
 #### Fixes :wrench:
 
-- Fixed broken Entity Tracking [sandcastle](https://sandcastle.cesium.com/?src=Entity%20tracking.html). [#12467](https://github.com/CesiumGS/cesium/pull/12467)
+- Fixed entity tracking for delayed datasource bounding spheres. [#12465](https://github.com/CesiumGS/cesium/issues/12465)
 - `Camera.getPickRay` now correctly returns a ray with origin in world coordinates in orthographic mode. [#12500](https://github.com/CesiumGS/cesium/pull/12500)
 - Fixed camera zooming in 3D orthographic mode when pixelRatio is not 1. [#12487](https://github.com/CesiumGS/cesium/pull/12487)
 - Fixed shape bounds and transforms for cylinder-shaped voxels. [#12522](https://github.com/CesiumGS/cesium/pull/12522)
+- Fixed metadata ordering for ellipsoid voxel tilesets. [#12544](https://github.com/CesiumGS/cesium/pull/12544)
+- Fixed an issue where clamped entities' height updates could stall when using high-resolution terrain due to a growing queue of tiles in `updateHeights` in `QuadtreePrimitive`. [#12476](https://github.com/CesiumGS/cesium/issues/12476)
+- Fixed `VaryingType.MAT3` definition. [#12524](https://github.com/CesiumGS/cesium/issues/12524)
+
+#### Deprecated :hourglass_flowing_sand:
+
+- The `defaultValue` function has been deprecated, and will be removed in 1.134. Instead, use the logical OR (`||`) the [nullish coalescing (`??`)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) operator. See the [Coding Guide](https://github.com/CesiumGS/cesium/tree/main/Documentation/Contributors/CodingGuide#default-parameter-values) for usage information and examples.
+- `defaultValue.EMPTY_OBJECT` has been deprecated, and will be removed in 1.134. Instead, use `Frozen.EMPTY_OBJECT`. See the [Coding Guide](https://github.com/CesiumGS/cesium/tree/main/Documentation/Contributors/CodingGuide#default-parameter-values) for usage information and examples.
 
 ## 1.127 - 2025-03-03
 
