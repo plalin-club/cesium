@@ -101,7 +101,8 @@
     "rimraf": "^6.0.1",
     "tsd-jsdoc": "^2.5.0",
     "typescript": "^5.3.2",
-    "yargs": "^18.0.0"
+    "yargs": "^18.0.0",
+    "wrangler": "^4.19.1"
   },
   "scripts": {
     "prepare": "gulp prepare && husky && ( [ \"$CF_PAGES\" != \"1\" ] && playwright install --with-deps || echo 'Skipping Playwright install' )",
@@ -140,8 +141,9 @@
     "deploy-set-version": "gulp deploySetVersion",
     "prettier": "prettier --write \"**/*\"",
     "prettier-check": "prettier --check \"**/*\"",
-    "cf-pages": "export PROD=1 && npm run clean && npm run make-zip && npm run build-apps && mkdir Build/Sandcastle/learn && mkdir Build/Sandcastle/learn/cesiumjs && mv Build/Documentation Build/Sandcastle/learn/cesiumjs/ref-doc && cp -fR Build/CesiumUnminified Build/Sandcastle && echo \"404 not found\" > Build/Sandcastle/404.html",
-    "cf-pages-dev": "npx wrangler pages dev Build/Sandcastle",
+    "cf-pages-build": "npm run clean && npm run make-zip && npm run build-apps && mkdir Build/Sandcastle/learn && mkdir Build/Sandcastle/learn/cesiumjs && mv Build/Documentation Build/Sandcastle/learn/cesiumjs/ref-doc && cp -fR Build/CesiumUnminified Build/Sandcastle && echo \"404 not found\" > Build/Sandcastle/404.html && wrangler dev",    
+    "cf-pages-deploy": "wrangler deploy",    
+    "cf-pages-dev": "npm run clean && npm run make-zip && npm run build-apps && mkdir Build/Sandcastle/learn && mkdir Build/Sandcastle/learn/cesiumjs && mv Build/Documentation Build/Sandcastle/learn/cesiumjs/ref-doc && cp -fR Build/CesiumUnminified Build/Sandcastle && echo \"404 not found\" > Build/Sandcastle/404.html && wrangler dev",
     "cspell": "npx cspell lint -c .vscode/cspell.json --unique --no-progress"
   },
   "engines": {
